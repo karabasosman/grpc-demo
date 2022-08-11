@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: grpc-demo-client
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grpc-demo-client
+  labels:
+    app: grpc-demo-client
+    service: grpc-demo-client
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 80
+  selector:
+    app: grpc-demo-client
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grpc-demo-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grpc-demo-client
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: grpc-demo-client
+        version: v1
+    spec:
+      serviceAccountName: grpc-demo-client
+      containers:
+      - image: docker.io/karabasosman/grpc-demo-client
+        imagePullPolicy: Always
+        name: grpc-demo-client
+        env:
+        - name: AdditionEndpoint
+          value: "http://grpc-demo-svc.backend:5001"
+        ports:
+        - containerPort: 80

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "calc.substract";
+
+package substract;
+
+
+service Substraction {
+  
+  rpc Substract (SubstractionRequest) returns (SubstractionResponse);
+}
+
+
+message SubstractionRequest {
+  int32 op1 = 1;
+  int32 op2 = 2;
+}
+
+
+message SubstractionResponse {
+  int32 result = 1;
+}
